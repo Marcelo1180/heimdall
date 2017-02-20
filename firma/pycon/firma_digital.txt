@@ -1,0 +1,104 @@
+
+http://webs.um.es/danielsm/miwiki/doku.php
+
+integridad <-- la informacion no se modifica
+autenticidad <-- el firmante es quien dice ser
+no repudio <-- la firma digital tiene validez legal igual que cualquier documento
+
+(HASH) Seguridad Firma
+md5(128 bits), sha-1(160 bits) <--  ya no se utiliza 
+sha-2(256 o 512 bits) <-- ofrece mayor seguridad
+
+(HASH) Seguridad Contraseñas
+SALT <-- se debe utilizar salt por que contra ataques de diccionario ofrece un timestamp que dificulta la comparacion de cadenas de cifrado
+
+
+DETACHED
+Sacar la clave publica
+pkcs11-tool --module /usr/lib/x86_64-linux-gnu/opensc-pkcs11.so -l --pin 12345678 --id 10 --read-object --type pubkey --output-file pubkey.spki
+
+Sacar el certificado digital
+pkcs11-tool --module /usr/lib/x86_64-linux-gnu/opensc-pkcs11.so -l --pin 12345678 --id 10 --read-object --type cert --output-file crt509.der
+
+
+python signer.py --pin 12345678 /usr/lib/x86_64-linux-gnu/opensc-pkcs11.so prueba.pdf
+
+
+
+La firma digital siempre se verfica con un clave publica
+python verifysignature.py pubkey.spki prueba.pdf
+
+
+ENVELOPING
+https://www.gnupg.org/gph/es/manual/x154.html
+GPG es una herramienta en linux que nos sirve para cifrar un documento
+gpg --output doc.sig --sign doc
+Se utiliza aqui por que de un documento firmado puedes extraer el documento original
+gpg --output doc --decrypt doc.sig
+
+
+ENVELOPED
+Aun me falta esta parte para meterlo la en el documento PDF
+
+
+
+
+Certificados
+x509 binario codificado (.der/.der/.crt)
+x509 base64 (.cer)
+x509 base64 con cabeceras(.pem)
+PKCS#7 (.p7b/.p7c) <- guarda la ruta completa de certificacion
+PKCS#12 (.p12/.pfx) <-- Token por software, permite guardar la clave privada con password
+
+Algoritmos
+DH (intercambio de claves)
+RSA (cifrado y firma digital)
+DSA (firma digital)
+
+CRIPTOGRAFIA
+https://www.youtube.com/watch?v=tIrw65hBbDM
+https://www.youtube.com/watch?v=DcWMJmveADA
+
+ARCHIVOS PEM es un estandar que consiste en agregar un inicio y fin de documento a modo de comentario
+http://how2ssl.com/articles/working_with_pem_files/
+
+ENVIAR DATOS DE FORMA SEGURA
+GnuPG (GPG)
+https://www.genbetadev.com/seguridad-informatica/manual-de-gpg-cifra-y-envia-datos-de-forma-segura
+GPG con json nos permitira cifrar mensajes entre puntos de manera sencilla
+https://www.npmjs.com/package/json-gpg
+PKCS11 en node
+https://github.com/PeculiarVentures/graphene
+
+SERVIDOR PARA FIRMA DE DOCUMENTOS
+https://www.signserver.org/index.html
+
+RECURSOS PyKCS11
+https://gitlab.com/pycon-de-2011-kryptografie-demo/pycon-de-2011-kryptografie-demo/blob/master/getinfo.py
+https://www.youtube.com/watch?v=MMeygxTBtWY
+
+https://github.com/leifj/PyKCS11/commits/master
+
+FIRMA DIGITAL y CERTIFICADOS DIGITALES
+https://www.youtube.com/watch?v=ry2i9dXonxU
+https://www.youtube.com/watch?v=o1vhNtf0rr0
+
+FIRMA ELECTRONICA
+Es el concepto base el mensaje con clave privada firma/decifra el mensaje y el usuario con la clave publica es quien valida/cifra el mensaje
+https://www.youtube.com/watch?v=tVc0LQYcZmg
+
+ADUANA BOLIVIA
+http://www.aduana.gob.bo/firmadigital/token.php
+http://www.aduana.gob.bo/infosuma/cartillas/FirmaDigital.pdf
+http://www.aduana.gob.bo/infosuma/cartillas/FolletoCertificadoDigital_Vnormal.pdf
+
+FIRMADOR para PKCS#7
+https://www.signfiles.com/p7s-signer/
+
+PyKCS11 openstack
+https://github.com/openstack/anchor/blob/master/anchor/signers/pkcs11.py
+PyKCS11 windows
+http://stackoverflow.com/questions/39346577/pykcs11-get-token-certificates
+
+PKCS7 en php
+http://cryptophp.wikidot.com/ejemplo-openssl-pkcs7-encrypt
